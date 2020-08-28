@@ -7,11 +7,11 @@ export default (state = INITIAL_STATE, action) => {
 		case LOGIN:
 			return {
 				...state,
-				email: action.payload.email,
+				email: action.payload.login,
 				token: action.payload.token,
 			};
 		case LOGOUT:
-			return { ...state, ...INITIAL_STATE };
+			return {};
 		default:
 			return state;
 	}
