@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { Template } from "../../components";
 import { SERVER_IP } from "../../private";
-import CurrentOrder from "./CurrentOrder";
+import EditOrder from "./EditOrder";
 import axios from "axios";
 import "./viewOrders.css";
 
@@ -34,7 +34,7 @@ const ViewOrders = () => {
 				<form onSubmit={onSubmit}>
 					<div className="container-fluid">
 						{orders.map((order) => {
-							<CurrentOrder order={order} />;
+							<EditOrder order={order} />;
 						})}
 					</div>
 				</form>
