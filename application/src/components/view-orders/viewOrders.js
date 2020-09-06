@@ -1,46 +1,36 @@
 import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
 import { Template } from "../../components";
 import { SERVER_IP } from "../../private";
-import CurrentOrder from "./CurrentOrder";
+import EditOrder from "./editOrder";
 import axios from "axios";
 import "./viewOrders.css";
 
 const ViewOrders = () => {
 	const [orders, setOrders] = useState([""]);
-	let history = useHistory();
+
+	const [updateViewOrders, setUpdateViewOrders] = useState(false);
 
 	useEffect(() => {
 		axios
 			.get(`${SERVER_IP}/api/current-orders`)
 			.then((response) => {
 				setOrders(response.data);
+				console.log(response);
 			})
 			.catch((error) => {
 				console.log("Error getting orders");
 			});
-	});
+	}, [updateViewOrders]);
 
-	const onSubmit = (e) => {
-		e.preventDefault();
-
-		axios
-			.post(`${SERVER_IP}/api/current-orders/${id}`)
-			.then((res) => console.log(res.data));
-		history.push("/");
-
-		return (
-			<Template>
-				<form onSubmit={onSubmit}>
-					<div className="container-fluid">
-						{orders.map((order) => {
-							<CurrentOrder order={order} />;
-						})}
-					</div>
-				</form>
-			</Template>
-		);
-	};
+	return (
+		<Template>
+			<div className="container-fluid">
+				{orders.map((order) => (
+					<EditOrder order={order} setUpdateViewOrders={setUpdateViewOrders} />
+				))}
+			</div>
+		</Template>
+	);
 };
 
 export default ViewOrders;

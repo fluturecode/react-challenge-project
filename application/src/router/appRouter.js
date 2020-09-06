@@ -9,13 +9,16 @@ const AppRouter = ({ token }) => {
 		<Router>
 			<Route path="/" exact component={Main} />
 			<Route path="/login" exact component={Login} />
-			<GuardedRouter token={token} path="/order" exact component={OrderForm} />
+			<Route path="/order" exact component={OrderForm} />
+			<Route path="/view-orders" exact component={ViewOrders} />
+			{/* Change back to Guarded once view-orders funcationality is updated */}
+			{/* <GuardedRouter token={token} path="/order" exact component={OrderForm} />
 			<GuardedRouter
 				token={token}
 				path="/view-orders"
 				exact
-				component={ViewOrders}
-			/>
+				component={ViewOrders} */}
+			{/* /> */}
 		</Router>
 	);
 };
