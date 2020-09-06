@@ -6,8 +6,7 @@ export default (state = INITIAL_STATE, action) => {
 	switch (action.type) {
 		case LOGIN:
 			return {
-				...state,
-				email: action.payload.login,
+				email: action.payload.email,
 				token: action.payload.token,
 			};
 		case LOGOUT:
