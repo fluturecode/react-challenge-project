@@ -4,72 +4,85 @@ import "./viewOrders.css";
 import axios from "axios";
 
 const EditOrder = (props) => {
-	const [order, setOrder] = usetState("");
-	const [order_item, setOrder_item] = useState("");
-	const [quantity, setQuantity] = useState("");
-	const [ordered_by, setOrdered_by] = useState("");
-	let history = useHistory();
+	const { setUpdateViewOrders, order } = props;
+	const { _id, order_item, createdAt, quantity, ordered_by } = order;
+	const [toggleEdit, setToggleEdit] = useState(false);
+	const [editQuantity, setEditQuantity] = useState(quantity);
 
-	useEffect(() => {
-		axios
-			.get(`${SERVER_IP}/api/current-orders/` + props.match.params.id)
-			.then((response) => {
-				setOrder_item(response.data.order_item);
-				setQuantity(response.data.cohort_quantity);
-				setOrdered_by(response.data.ordered_by);
-			})
-			.catch((error) => {
-				console.log(error);
-			});
-
-		const changeQuantity = (e) => {
-			setQuantity(e.target.value);
-		};
-
+	const editOrder = () => {
 		const order = {
+			id: _id,
 			ordered_by: ordered_by,
-			quantity: quantity,
-			order_item: order_item,
+			quantity: editQuantity,
+			menu_item: order_item,
 		};
 		axios
-			.post(`${SERVER_IP}/api/edit-order/` + props.match.params.id, order)
-			.then((res) => console.log(res.data));
-		history.push("/");
-	});
+			.post(`${SERVER_IP}/api/edit-order`, order)
+			.then((res) => {
+				setUpdateViewOrders(true);
+			})
+			.catch((err) => {
+				console.log(`Update unsuccessful`);
+			});
+	};
 
-	const deleteItem = (id) => {
+	const deleteOrder = () => {
 		axios
-			.delete(`${SERVER_IP}/api/delete-order/${id}`)
-			.then((res) => setOrder(order.filter((el) => el._id !== id)));
+			.post(`${SERVER_IP}/api/delete-order`, {
+				id: _id,
+			})
+			.then((res) => {
+				setUpdateViewOrders(true);
+			})
+			.catch((err) => {
+				console.log(`Delete order unsuccessful`);
+			});
+	};
+
+	const onClickToggleEdit = () => {
+		if (toggleEdit) {
+			// if editing current order
+			editOrder();
+		}
+		setToggleEdit(!toggleEdit);
 	};
 
 	return (
-		<div className="row view-order-container" key={order._id}>
+		<div className="row view-order-container" key={_id}>
 			<div className="col-md-4 view-order-left-col p-3">
-				<h2>{order.order_item}</h2>
-				<p>Ordered by: {order.ordered_by || ""}</p>
+				<h2>{order_item}</h2>
+				<p>Ordered by: {ordered_by || ""}</p>
 			</div>
 			<div className="col-md-4 d-flex view-order-middle-col">
-				<p>
-					Order placed at{" "}
-					{`${createdDate.getHours()}:${createdDate.getMinutes()}:${createdDate.getSeconds()}`}
-				</p>
+				<p>Order placed at {`${createdAt}`}</p>
 				<p>
 					<label className="qty-label">Quantity:</label>
-					<select defaultValue={quantity} onChange={changeQuantity}>
-						<option value="1">1</option>
-						<option value="2">2</option>
-						<option value="3">3</option>
-						<option value="4">4</option>
-						<option value="5">5</option>
-						<option value="6">6</option>
-					</select>
+					{toggleEdit ? (
+						<select
+							value={editQuantity}
+							defaultValue={quantity}
+							onChange={(e) => setEditQuantity(e.target.value)}
+						>
+							<option value="1">1</option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+							<option value="4">4</option>
+							<option value="5">5</option>
+							<option value="6">6</option>
+						</select>
+					) : (
+						quantity
+					)}
 				</p>
 				<div className="col-md-4 view-order-right-col">
-					<button onClick={editItem} type="submit" className="btn btn-success">
-						Edit
+					<button
+						onClick={onClickToggleEdit}
+						type="submit"
+						className="btn btn-success"
+					>
+						{toggleEdit ? "Complete Edit" : "Edit"}
 					</button>
-					<button onClick={deleteItem} className="btn btn-danger">
+					<button onClick={deleteOrder} className="btn btn-danger">
 						Delete
 					</button>
 				</div>
