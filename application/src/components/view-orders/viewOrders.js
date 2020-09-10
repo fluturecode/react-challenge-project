@@ -26,8 +26,6 @@ const ViewOrders = () => {
 		fetchData();
 	}, [updateViewOrders]);
 
-	console.log("ORDERS ARE >>> ", orders);
-
 	return (
 		<Template>
 			<div className="container-fluid">

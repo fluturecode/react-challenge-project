@@ -9,8 +9,6 @@ const EditOrder = (props) => {
 	const [toggleEdit, setToggleEdit] = useState(false);
 	const [editQuantity, setEditQuantity] = useState(quantity);
 
-	console.log("DEBUG 2 >>>", props);
-
 	const editOrder = () => {
 		const order = {
 			id: _id,
@@ -29,14 +27,11 @@ const EditOrder = (props) => {
 	};
 
 	const deleteOrder = () => {
-		console.log("YOU ARE TRYING TO DELETE", _id);
-		console.log("SERVER: ", SERVER_IP);
 		axios
 			.post(`${SERVER_IP}/api/delete-order`, {
 				id: _id,
 			})
 			.then((res) => {
-				console.log("DEBUG 3 >>>>>>>", res);
 				setUpdateViewOrders(true);
 			})
 			.catch((err) => {
@@ -46,7 +41,7 @@ const EditOrder = (props) => {
 
 	const onClickToggleEdit = () => {
 		if (toggleEdit) {
-			// if editing...
+			// if editing current order
 			editOrder();
 		}
 		setToggleEdit(!toggleEdit);
